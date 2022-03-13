@@ -6,10 +6,10 @@ I am using TCP but Redis and RabbitMQ can be easily swapped in with minimal chan
 
 **The "Subscriber"**
 
-- runs on port 8000 in local (would be deployed independently and have it's own baseURL)
+- runs on `port 8000` in local (would be deployed independently and have it's own baseURL)
 - calls two instances of "app.listen":
-  - `main.ts`: NestFactory.create(), exposes the endpoints and CRUD operations of the application.
-  - `listen.ts`: NestFactory.createMicroservice, which listens to messages and events sent or emitted from the client in the Provider Application using the `@EventPattern` and `@MessagePattern`
+  - `main.ts`: `NestFactory.create()`, exposes the endpoints and CRUD operations of the application.
+  - `listen.ts`: `NestFactory.createMicroservice()`, which listens to messages and events sent or emitted from the client in the Provider Application using the `@EventPattern` and `@MessagePattern`
 - has two root configs: `nest-cli.json` and `listen.json`
 
 **The "Provider"**
@@ -86,14 +86,17 @@ $ npm run start:dev
 
 <a href="https://www.youtube.com/watch?v=IsubcKdZPyE">Antonio Papa - Scalable Scripts</a>
 
-This guy is my favourite.
-Youtube video - prior nestjs experience would be helpful for this tutorial.
-About half way through access the microservices stuff
-He explains how to set up two listeners from the same app.
+- Youtube video
+- This guy is my favourite.
+- Easy to follow youtube video. Prior nestjs experience would be helpful for this tutorial.
+- About half way through he starts on the microservices stuff, the first half is just nestjs and typeorm set up for two apps.
+- He explains how to set up two listeners from the same app.
 
 <a href="https://www.youtube.com/watch?v=IpoaVi9iPWI">Brian Johnson</a>
 
-Another youtube video. I found this one to be missing some steps and also had to troubleshoot a few errors that weren't covered in the tutorials. Videos are short though and he does a good job explaining some of concepts and setting up gRPC (this is a series of four video... grpc is last)
+- Another youtube video. 4 part series, focuses just on the microservice stuff.
+- I found this one to be missing some steps and also had to troubleshoot a few errors that weren't covered in the tutorials (very likely this was my bad).
+- He does a good job explaining some of the concepts and setting up gRPC ( grpc is last video in the series )
 
 <a href="https://docs.nestjs.com/microservices/basics">Official Nestjs docs</a>
 
