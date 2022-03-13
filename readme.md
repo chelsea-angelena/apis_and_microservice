@@ -19,7 +19,7 @@ I am using TCP but Redis and RabbitMQ can be easily swapped in with minimal chan
 - Has an instance of CreateClientProxy from nestjs microservices within the Provider Module.
   - This client proxy is injected into the Provider controller, and whenever we hit these endpoints, the @EventPattern and @MessagePattern will send or emit the provided data over to the listener in the Subscribers Service.
 
-![alt text](https://github.com/chelsea-angelena/microservices/diagram.png?raw=true)
+![alt text](https://github.com/chelsea-angelena/apis_and_microservice/diagram.png?raw=true)
 
 ## Dependencies
 
