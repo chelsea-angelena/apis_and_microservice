@@ -21,6 +21,12 @@ I am using TCP but Redis and RabbitMQ can be easily swapped in with minimal chan
 
 ![alt text](https://github.com/chelsea-angelena/apis_and_microservice/blob/main/diagram.png?raw=true)
 
+## Testing out the Microservice
+
+Currently there is only one function passing hardcoded data. WIP.
+
+If you hit the `/api/provider` endpoint with a `GET` request you will see the data logged in the terminal where you have ran `app.listen()`
+
 ## Dependencies
 
 - Node
