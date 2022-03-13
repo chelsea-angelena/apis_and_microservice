@@ -1,25 +1,25 @@
 ## Description
 
-This is a very barebones minimal example of setting up two separate nest APIS which run indepedently but are connected through a microservice. For the sake of simplicity both apps have been committed to the same repo, but these could live each in their own repository. The each have a different url, different database, and their own endpoints.
+This is a very barebones minimal example of setting up two separate nest APIS which run independently but are connected through a microservice. For the sake of simplicity both apps have been committed to the same repo, but these could live each in their own repository. They each have a different url, different database, and their own endpoints, and connect through a nestjs microservice.
 
 I am using TCP but Redis and RabbitMQ can be easily swapped in with minimal changes
 
 **The "Subscriber"**
 
 - runs on port 8000 in local (would be deployed independently and have it's own baseURL)
-- Calls two instances of "app.listen":
+- calls two instances of "app.listen":
   - `main.ts`: NestFactory.create(), exposes the endpoints and CRUD operations of the application.
-  - `listen.ts`: NestFactory.createMicroservice, which listens to messages and events sent or emitted from the Provider Application. Receives data from the provider in this way.
-- Has two root configs: `nest-cli.json` and `listen.json`
+  - `listen.ts`: NestFactory.createMicroservice, which listens to messages and events sent or emitted from the client in the Provider Application using the `@EventPattern` and `@MessagePattern`
+- has two root configs: `nest-cli.json` and `listen.json`
 
 **The "Provider"**
 
-- runs on port 8001 in local (would be deployed independently and have it's own baseURL)
-- `main.ts`: Calls NestFactory.create() -> app.listen()
-- Has an instance of CreateClientProxy from nestjs microservices within the Provider Module.
-  - This client proxy is injected into the Provider controller, and whenever we hit these endpoints, the @EventPattern and @MessagePattern will send or emit the provided data over to the listener in the Subscribers Service.
+- runs on `port 8001` in local (would be deployed independently and have it's own baseURL)
+- `main.ts`: Calls `NestFactory.create()` -> `app.listen()`
+- has an instance of `CreateClientProxy` from `nestjs microservices` within the Provider Module.
+  - this client proxy is injected into the Provider controller, and whenever we hit these endpoints, the client proxy will send or emit data to the listener in the Subscriber app
 
-![alt text](https://github.com/chelsea-angelena/apis_and_microservice/diagram.png?raw=true)
+![alt text](https://github.com/chelsea-angelena/apis_and_microservice/blob/main/diagram.png?raw=true)
 
 ## Dependencies
 
