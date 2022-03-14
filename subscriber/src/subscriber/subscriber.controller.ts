@@ -1,15 +1,9 @@
 import {
   Controller,
-  Param,
-  Delete,
-  Patch,
-  Post,
-  Body,
-  Get,
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { EventPattern } from '@nestjs/microservices';
+import { MessagePattern, EventPattern } from '@nestjs/microservices';
 import { SubscribersService } from './subscriber.service';
 import { UpdateSubscriberDto, CreateSubscriberDto } from './dto/subscriber.dto';
 
@@ -18,34 +12,34 @@ import { UpdateSubscriberDto, CreateSubscriberDto } from './dto/subscriber.dto';
 export class SubscribersController {
   constructor(private subService: SubscribersService) {}
 
-  // Listens to and receives data from the microservice
-  @EventPattern('Hello')
-  async hello(data) {
-    console.log(data);
+  @MessagePattern({ cmd: 'get-all-subscribers' })
+  async getAllSubscribers(msg) {
+    console.log(msg);
+    const subs = await this.subService.getAll();
+    return subs;
   }
 
-  //CRUD OPS:
-
-  @Get()
-  async getSubscribers() {
-    return await this.subService.getAll();
+  @MessagePattern({ cmd: 'get-single-subscriber' })
+  async getSingleSubscriber(data) {
+    return await this.subService.getOne(data.id);
   }
-  @Get('id')
-  async getSubscriber(@Param('id') id: number) {
-    return await this.subService.getOne(id);
-  }
-  @Patch('id')
-  async update(@Param('id') id: number, @Body() data: UpdateSubscriberDto) {
-    return await this.update(id, data);
+  @MessagePattern({ cmd: 'add-subscriber' })
+  async createSubscriber(data: CreateSubscriberDto) {
+    const subscriber = await this.subService.addSubscriber({
+      email: data.email,
+      name: data.name,
+    });
+    return subscriber;
   }
 
-  @Delete('id')
-  async delete(@Param('id') id: number) {
-    return await this.delete(id);
+  @MessagePattern({ cmd: 'update-subscriber' })
+  async updateSubscriber(data: { id: number; data: UpdateSubscriberDto }) {
+    const updated = await this.subService.update(data.id, data.data);
+    return updated;
   }
 
-  @Post()
-  async createSubscriber(@Body() data: CreateSubscriberDto) {
-    return await this.subService.addSubscriber(data);
+  @MessagePattern({ cmd: 'delete-subscriber' })
+  async deleteSubscriber(data) {
+    return await this.subService.delete(data);
   }
 }

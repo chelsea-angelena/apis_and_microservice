@@ -28,6 +28,6 @@ export class SubscribersService {
   }
 
   async addSubscriber(data: CreateSubscriberDto) {
-    return await this.subRepository.save(this.subRepository.create(data));
+    return await this.subRepository.save(await this.subRepository.create(data));
   }
 }

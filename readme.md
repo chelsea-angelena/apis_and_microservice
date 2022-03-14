@@ -4,9 +4,10 @@ This is a very barebones minimal example of setting up two separate nest APIS wh
 
 I am using TCP but Redis and RabbitMQ can be easily swapped in with minimal changes
 
-**The "Subscriber"**
+**The "Subscriber + MicroService"**
 
 - runs on `port 8000` in local (would be deployed independently and have it's own baseURL)
+  - This is only if you want to expose this API... it is not necessary if you only want to run the microservice from this app. Running both allows you to have a microservice within an existing application which communicates with the provider, while also having exposed endpoints for other bussiness
 - calls two instances of "app.listen":
   - `main.ts`: `NestFactory.create()`, exposes the endpoints and CRUD operations of the application.
   - `listen.ts`: `NestFactory.createMicroservice()`, which listens to messages and events sent or emitted from the client in the Provider Application using the `@EventPattern` and `@MessagePattern`
@@ -17,7 +18,7 @@ I am using TCP but Redis and RabbitMQ can be easily swapped in with minimal chan
 - runs on `port 8001` in local (would be deployed independently and have it's own baseURL)
 - `main.ts`: Calls `NestFactory.create()` -> `app.listen()`
 - has an instance of `CreateClientProxy` from `nestjs microservices` within the Provider Module.
-  - this client proxy is injected into the Provider controller, and whenever we hit these endpoints, the client proxy will send or emit data to the listener in the Subscriber app
+  - this client proxy is injected into the Provider controller, and whenever we hit these endpoints, the client proxy will send or emit data and commans to the listener in the Subscriber app, which retrieves the data from within the subscription database and sends it back to the clientProxy in the Provider
 
 ![alt text](https://github.com/chelsea-angelena/apis_and_microservice/blob/main/diagram.png?raw=true)
 

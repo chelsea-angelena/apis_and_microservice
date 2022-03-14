@@ -14,37 +14,48 @@ import {
 } from '@nestjs/common';
 import { ProviderService } from './provider.service';
 import { ClientProxy } from '@nestjs/microservices';
-import { UpdateProviderDto, CreateProviderDto } from './dto/provider.dto';
+import { UpdateProviderDto, CreateSubscriberDto } from './dto/provider.dto';
 
 @Controller('Provider')
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProviderController {
   constructor(
     @Inject('SUBSCRIBER_SERVICE') private readonly client: ClientProxy,
-    private readonly provService: ProviderService,
   ) {}
 
   @Get()
-  async getProvider() {
-    return this.client.emit('Hello', 'hello from microservice');
-  }
-  @Get('id')
-  async getSubscriber(@Param('id') id: number) {
-    return await this.provService.getOne(id);
-  }
-  @Patch('id')
-  async update(@Param('id') id: number, @Body() data: UpdateProviderDto) {
-    return await this.provService.update(id, data);
-  }
-
-  @Delete('id')
-  async delete(@Param('id') id: number) {
-    return await this.provService.delete(id);
+  async getAllSubscribers() {
+    return await this.client.send(
+      { cmd: 'get-all-subscribers' },
+      'Optional Message or data',
+    );
   }
 
   @Post()
-  async createSubscriber(@Body() data: CreateProviderDto) {
+  async createSubscriber(@Body() data: CreateSubscriberDto) {
     console.log(data);
-    return await this.provService.addSubscriber(data);
+    return this.client.send(
+      {
+        cmd: 'add-subscriber',
+      },
+      data,
+    );
+  }
+
+  @Get(':id')
+  async getSingleSubscriber(@Param('id') id: number) {
+    return this.client.send({ cmd: 'get-single-subscriber' }, id);
+  }
+  @Patch(':id')
+  async updateSubscriber(
+    @Param('id') id: number,
+    @Body() data: UpdateProviderDto,
+  ) {
+    return this.client.send({ cmd: 'update-subscriber' }, { id, data });
+  }
+
+  @Delete(':id')
+  async deleteSubscriber(@Param('id') id: number) {
+    return this.client.send({ cmd: 'delete-subscriber' }, id);
   }
 }
